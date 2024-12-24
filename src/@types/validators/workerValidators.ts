@@ -1,0 +1,41 @@
+import { object, optional, string, pipe, nonEmpty, date, check, minLength, minValue, array, boolean } from "valibot";
+import { invalidMsg, numberValidator, optionalNumberValidator, requiredMsg } from ".";
+
+export const WorkerValidationSchema = object({
+  name: pipe(string(invalidMsg), nonEmpty("Worker name is required")),
+  dateOfBirth: date("Date of birth is required"),
+  operatingFees: pipe(numberValidator, minValue(1, "Operating fees must be greater than 0")),
+  residenceNumber: pipe(
+    string(invalidMsg),
+    nonEmpty("Residence number is required"),
+    check((input) => /^\d+$/.test(input), "Residence number must contain only numbers"),
+  ),
+  phone: pipe(
+    string(requiredMsg),
+    nonEmpty(requiredMsg),
+    check((input) => /^\d+$/.test(input), "Phone must contain only numbers"),
+    minLength(10, "Phone must be 10 digit"),
+  ),
+  religionId: optionalNumberValidator,
+  yearsOfExperience: pipe(numberValidator, minValue(1, "Years of experience must be greater than 0")),
+  languageId: numberValidator,
+  nationalityId: pipe(string(invalidMsg), nonEmpty("Nationality is required")),
+  genderId: numberValidator,
+  firstEntryDate: date(requiredMsg),
+  lastEntryDate: date(requiredMsg),
+  dateOfExit: date(requiredMsg),
+  workStartDate: date(requiredMsg),
+  visaExpiryDate: date(requiredMsg),
+  lastEntryPort: pipe(string(invalidMsg), nonEmpty(requiredMsg)),
+  salary: pipe(numberValidator, minValue(1, "Salary must be greater than 0")),
+  borderNumber: pipe(numberValidator, minValue(1, "Border number must be greater than 0")),
+  branchId: pipe(string(invalidMsg), nonEmpty(requiredMsg)),
+  passportNumber: pipe(numberValidator, minValue(1, "Passport number must be greater than 0")),
+  externalOffice: pipe(string(invalidMsg), nonEmpty(requiredMsg)),
+  visaType: pipe(string(invalidMsg), nonEmpty(requiredMsg)),
+  skills: pipe(string(invalidMsg), nonEmpty(requiredMsg)),
+  jobStatusId: pipe(numberValidator, minValue(0, requiredMsg)),
+  jobId: pipe(string(invalidMsg), nonEmpty("Job is required")),
+  isActive: optional(boolean(invalidMsg)),
+  workerTypeOfServicesIds: pipe(array(pipe(string(invalidMsg), nonEmpty(requiredMsg))), minLength(1, requiredMsg)),
+});
